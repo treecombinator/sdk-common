@@ -8,7 +8,7 @@
 
 ---
 
-The **common** primitive of the Tree Combinator SDK — the one genuinely shared piece: the error contract (`TcError` + `ERROR_CODES`) that crosses the wire between server and client. Zero runtime dependencies, isomorphic.
+The **common** primitive of the Tree Combinator SDK — the one genuinely shared piece: `TcError`, the domain error that crosses the wire between server and client. Zero runtime dependencies, isomorphic.
 
 ## Install
 
@@ -19,9 +19,9 @@ npm install github:treecombinator/sdk-common
 ## Use
 
 ```ts
-import { TcError, ERROR_CODES, type ErrorCode } from "@treecombinator/sdk-common";
+import { TcError } from "@treecombinator/sdk-common";
 
-throw new TcError("not_found", "user not found"); // serializes as { error: "not_found" }
+throw new TcError("user_not_found", "no user for that email"); // serializes as { error: "user_not_found" }
 ```
 
-`TcError(code, message?, details?)` is a domain error carrying a stable `ErrorCode`; its `toJSON()` is the `{ error, details? }` wire shape the client maps back to a message. `ERROR_CODES` is the canonical snake_case list both sides share (`unauthorized`, `forbidden`, `not_found`, `invalid_input`, `conflict`, `rate_limited`, `internal`).
+`TcError(code, message?, details?)` is the domain error every package throws. `code` is a **specific** snake_case string in the `entity_reason` shape — `user_not_found`, `invalid_credentials`, `email_already_registered` — never a vague `not_found`. Each domain owns its own codes. `toJSON()` is the `{ error, details? }` wire shape the client maps back to a human message.

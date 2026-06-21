@@ -1,26 +1,14 @@
 /**
- * Stable error codes in snake_case — the error boundary between server and client.
- * Crosses the wire as `{ error: code }`; the reader maps each code to a message and
- * never shows the raw code. One source of truth for both sides.
+ * The domain error that crosses the wire between server and client.
+ * Throw it with a SPECIFIC snake_case code in the `entity_reason` shape (e.g. "user_not_found",
+ * "invalid_credentials", "email_already_registered") — never a vague "not_found". Each domain
+ * owns its own codes; the reader maps the code to a message. Serializes to `{ error, details? }`.
  */
-export const ERROR_CODES = [
-  "unauthorized",
-  "forbidden",
-  "not_found",
-  "invalid_input",
-  "conflict",
-  "rate_limited",
-  "internal",
-] as const;
-
-export type ErrorCode = (typeof ERROR_CODES)[number];
-
-/** Domain error carrying a stable code + optional serializable details. */
 export class TcError extends Error {
-  readonly code: ErrorCode;
+  readonly code: string;
   readonly details?: Record<string, unknown>;
 
-  constructor(code: ErrorCode, message?: string, details?: Record<string, unknown>) {
+  constructor(code: string, message?: string, details?: Record<string, unknown>) {
     super(message ?? code);
     this.name = "TcError";
     this.code = code;
@@ -28,7 +16,7 @@ export class TcError extends Error {
   }
 
   /** Serializable shape that crosses the HTTP boundary (the client reads this). */
-  toJSON(): { error: ErrorCode; details?: Record<string, unknown> } {
+  toJSON(): { error: string; details?: Record<string, unknown> } {
     return this.details ? { error: this.code, details: this.details } : { error: this.code };
   }
 }

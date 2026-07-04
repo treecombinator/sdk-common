@@ -2,7 +2,7 @@
   "name": "@treecombinator/sdk-common",
   "version": "0.0.1",
   "license": "Apache-2.0",
-  "description": "Tree Combinator SDK — the one shared primitive: the error contract (TcError, ERROR_CODES). Zero runtime dependencies.",
+  "description": "Tree Combinator SDK — the one shared primitive: the error contract (TcError). Zero runtime dependencies.",
   "type": "module",
   "files": ["dist", "AGENTS.md", "README.md", "LICENSE"],
   "main": "./dist/index.cjs",

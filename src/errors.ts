@@ -7,12 +7,20 @@
 export class TcError extends Error {
   readonly code: string;
   readonly details?: Record<string, unknown>;
+  /**
+   * HTTP status the error crossed the wire with, when known. Set by transports (the client
+   * http package) when mapping a response back into a TcError; server code composing the
+   * response derives the status elsewhere. Not part of `toJSON()` — on the wire it IS the
+   * response's HTTP status, never a body field.
+   */
+  readonly status?: number;
 
-  constructor(code: string, message?: string, details?: Record<string, unknown>) {
+  constructor(code: string, message?: string, details?: Record<string, unknown>, status?: number) {
     super(message ?? code);
     this.name = "TcError";
     this.code = code;
     this.details = details;
+    this.status = status;
   }
 
   /** Serializable shape that crosses the HTTP boundary (the client reads this). */

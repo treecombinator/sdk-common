@@ -13,7 +13,7 @@ The **common** primitive of the Tree Combinator SDK — the one genuinely shared
 ## Install
 
 ```bash
-npm install github:treecombinator/sdk-common
+givo add @treecombinator/sdk-common
 ```
 
 ## Use
